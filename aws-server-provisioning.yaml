@@ -6,6 +6,7 @@
     instance_type: t3.micro
     ami_id: ami-0055977a6e828a4f4
     action: create
+    domain_name: anilkumarpatnana.online
   tasks:
     - name: Launching ec2 instances for roboshop.
       amazon.aws.ec2_instance:
@@ -18,6 +19,20 @@
             region: "us-east-1"
       loop: "{{ servers }}"
       when: action == "create"
+      register: ec2_output
+
+    - name:
+      amazon.aws.route53:
+            state: present
+            zone: "{{domain_name}}"
+            record: "roboshop.{{item.item}}.{{domain_name}}"
+            value: "{{item.instances[0].private_ip_address}}"
+            type : "A"
+            overwrite: true
+      loop: ec2_output.results
+      when: action = "create"
+
+      
       
 
 
