@@ -3,7 +3,7 @@
   become: yes
   tasks:
    - name: Creating mongo repo file
-     ansible.builtin.file:
+     ansible.builtin.copy:
            src: mongo.repo
            dest: /etc/yum.repos.d/mongo.repo
    - name: Installing mongodb server
