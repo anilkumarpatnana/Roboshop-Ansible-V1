@@ -1,6 +1,5 @@
 - name: Configuring mongodb server
-  hosts: localhost
-  connection: localhost
+  hosts: mongodb
   become: yes
   tasks:
    - name: Creating mongo repo file

@@ -1,6 +1,5 @@
 - name: Configuring redis server
-  hosts: localhost
-  connection: localhost
+  hosts: redis
   become: yes
   tasks:
    - name: Disabling default module redis
