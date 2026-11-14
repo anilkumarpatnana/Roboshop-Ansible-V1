@@ -10,13 +10,13 @@
     - name: Launching ec2 instances for roboshop.
       amazon.aws.ec2_instance:
             name: "roboshop-{{item}}"
-            instance_type: {{ instance_type }}
-            image_id: {{ ami_id }}
+            instance_type: "{{ instance_type }}"
+            image_id: "{{ ami_id }}"
             security_groups:
              - roboshop-common-ssh
              - "roboshop-{{ item }}"
             region: "us-east-1"
-      loop: {{ servers }}
+      loop: "{{ servers }}"
       when: action == create
       
 
