@@ -17,20 +17,19 @@
              - roboshop-common-ssh
              - "roboshop-{{ item }}"
             region: "us-east-1"
+            state: "{{ 'present' if action == 'create' else 'absent' }}"
       loop: "{{ servers }}"
-      when: action == "create"
       register: ec2_output
 
     - name:
       amazon.aws.route53:
-            state: present
+            state: "{{ 'present' if action == 'create' else 'absent' }}"
             zone: "{{domain_name}}"
             record: "roboshop.{{item.item}}.{{domain_name}}"
             value: "{{item.instances[0].private_ip_address}}"
             type : "A"
             overwrite: true
       loop: "{{ ec2_output.results }}"
-      when: action == "create"
 
       
       
