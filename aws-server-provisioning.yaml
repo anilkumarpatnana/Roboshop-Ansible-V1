@@ -29,8 +29,8 @@
             value: "{{item.instances[0].private_ip_address}}"
             type : "A"
             overwrite: true
-      loop: ec2_output.results
-      when: action = "create"
+      loop: "{{ ec2_output.results }}"
+      when: action == "create"
 
       
       
