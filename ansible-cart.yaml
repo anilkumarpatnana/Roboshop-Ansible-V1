@@ -42,7 +42,7 @@
             replace: 'roboshop.catalogue.anilkumarpatnana.online'
     - name: Adding redis server address in cart service file
       ansible.builtin.replace:
-            path: /etc/systemd/system/catalogue.service
+            path: /etc/systemd/system/cart.service
             regexp: '<REDIS-SERVER-IPADDRESS>'
             replace: 'roboshop.redis.anilkumarpatnana.online'        
     - name: Reloading systemd
