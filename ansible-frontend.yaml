@@ -1,0 +1,55 @@
+- name: Configuring frontend server
+  hosts: frontend
+  become: yes
+  tasks:
+    - name: Disabling default Nginx module
+      ansible.builtin.command: dnf module disable nginx -y
+    - name: Enabling nginx:1.26 module
+      ansible.builtin.command: dnf module enable nginx:1.26 -y
+    - name: Installing Nginx
+      ansible.builtin.package:
+          name: nginx
+          state: present
+    - name: starting and enabling Nginx service
+      ansible.builtin.service:
+            name: nginx
+            state: started
+            enabled: yes
+    - name: Removing default contnent from nginx path
+      ansible.builtin.command: rm -rf /usr/share/nginx/html/*
+    - name: Downloading the frontend application code
+      ansible.builtin.command: curl -L -o /tmp/frontend.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip
+    - name: Unzipping code to nginx home directory
+      ansible.builtin.unarchive:
+              src: /tmp/frontend.zip
+              dest: /usr/share/nginx/html
+              remote_src: true 
+    - name: Copying Nginx reverse proxy configuration file to /etc/nginx/default.d/roboshop.conf
+      ansible.builtin.copy:
+           src: roboshop.conf
+           dest: /etc/nginx/default.d/roboshop.conf
+    - name: Adding Catalogue server address in service file
+      ansible.builtin.replace:
+            path: /etc/nginx/default.d/roboshop.conf
+            regexp: '<CATALOGUE-SERVER-IPADDRESS>'
+            replace: 'roboshop.catalogue.anilkumarpatnana.online'
+    - name: Adding User server address in service file
+      ansible.builtin.replace:
+            path: /etc/nginx/default.d/roboshop.conf
+            regexp: '<USER-SERVER-IPADDRESS>'
+            replace: 'roboshop.user.anilkumarpatnana.online'
+    - name: Adding Cart server address in service file
+      ansible.builtin.replace:
+            path: /etc/nginx/default.d/roboshop.conf
+            regexp: '<CART-SERVER-IPADDRESS>'
+            replace: 'roboshop.cart.anilkumarpatnana.online'
+    - name: Adding Shipping server address in service file
+      ansible.builtin.replace:
+            path: /etc/nginx/default.d/roboshop.conf
+            regexp: '<SHIPPING-SERVER-IPADDRESS>'
+            replace: 'roboshop.shipping.anilkumarpatnana.online'
+    - name: Adding Payment server address in service file
+      ansible.builtin.replace:
+            path: /etc/nginx/default.d/roboshop.conf
+            regexp: '<PAYMENT-SERVER-IPADDRESS>'
+            replace: 'roboshop.payment.anilkumarpatnana.online'

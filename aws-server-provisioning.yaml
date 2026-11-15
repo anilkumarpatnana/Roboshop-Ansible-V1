@@ -2,7 +2,7 @@
   hosts: localhost
   connection: local
   vars:
-    servers: ["mongodb","redis","mysql","rabbitmq"]
+    servers: ["mongodb","redis","mysql","rabbitmq","catalogue","user","cart","frontend"]
     instance_type: t3.micro
     ami_id: ami-0055977a6e828a4f4
     action: create
@@ -21,16 +21,27 @@
       loop: "{{ servers }}"
       register: ec2_output
 
-    - name: "{{action}} route53 records"
+    - name: "{{ action }} route53 records for backend servers (Private IP)"
       amazon.aws.route53:
-            state: "{{ 'present' if action == 'create' else 'absent' }}"
-            zone: "{{domain_name}}"
-            record: "roboshop.{{item.item}}.{{domain_name}}"
-            value: "{{ item.instances[0].private_ip_address if action == 'create' else omit }}"
-            type : "A"
-            overwrite: true
+        state: "{{ 'present' if action == 'create' else 'absent' }}"
+        zone: "{{ domain_name }}"
+        record: "roboshop.{{ item.item }}.{{ domain_name }}"
+        value: "{{ item.instances[0].private_ip_address if action == 'create' else omit }}"
+        type: "A"
+        overwrite: true
       loop: "{{ ec2_output.results }}"
+      when: item.item != 'frontend'
 
+    - name: "{{ action }} route53 record for frontend server (Public IP)"
+      amazon.aws.route53:
+        state: "{{ 'present' if action == 'create' else 'absent' }}"
+        zone: "{{ domain_name }}"
+        record: "roboshop.{{ item.item }}.{{ domain_name }}"
+        value: "{{ item.instances[0].public_ip_address if action == 'create' else omit }}"
+        type: "A"
+        overwrite: true
+      loop: "{{ ec2_output.results }}"
+      when: item.item == 'frontend'
     - name: Print private IPs of roboshop servers
       ansible.builtin.debug:
          msg: "Private IP of {{ item.item }} is {{ item.instances[0].private_ip_address }}"
