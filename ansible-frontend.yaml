@@ -31,17 +31,17 @@
     - name: Adding Catalogue server address in service file
       ansible.builtin.replace:
             path: /etc/nginx/default.d/roboshop.conf
-            regexp: '<CATALOGUE-SERVER-IPADDRESS>'
+            regexp: '<CATALOGUE-IP>'
             replace: 'roboshop.catalogue.anilkumarpatnana.online'
     - name: Adding User server address in service file
       ansible.builtin.replace:
             path: /etc/nginx/default.d/roboshop.conf
-            regexp: '<USER-SERVER-IPADDRESS>'
+            regexp: '<USER-IP>'
             replace: 'roboshop.user.anilkumarpatnana.online'
     - name: Adding Cart server address in service file
       ansible.builtin.replace:
             path: /etc/nginx/default.d/roboshop.conf
-            regexp: '<CART-SERVER-IPADDRESS>'
+            regexp: '<CART-IP>'
             replace: 'roboshop.cart.anilkumarpatnana.online'
     # - name: Adding Shipping server address in service file
     #   ansible.builtin.replace:
