@@ -2,13 +2,13 @@
   hosts: localhost
   connection: local
   vars:
-    servers: ["mongodb","redis"]
+    servers: ["mongodb","redis","mysql","rabbitmq"]
     instance_type: t3.micro
     ami_id: ami-0055977a6e828a4f4
     action: create
     domain_name: anilkumarpatnana.online
   tasks:
-    - name: Launching ec2 instances for roboshop.
+    - name: "{{action}} ec2 instances for roboshop."
       amazon.aws.ec2_instance:
             name: "roboshop-{{item}}"
             instance_type: "{{ instance_type }}"
@@ -21,7 +21,7 @@
       loop: "{{ servers }}"
       register: ec2_output
 
-    - name: creating route53 records
+    - name: "{{action}} route53 records"
       amazon.aws.route53:
             state: "{{ 'present' if action == 'create' else 'absent' }}"
             zone: "{{domain_name}}"
@@ -31,9 +31,11 @@
             overwrite: true
       loop: "{{ ec2_output.results }}"
 
-      
-      
-
-
-
+    - name: Print private IPs of roboshop servers
+      ansible.builtin.debug:
+         msg: "Private IP of {{ item.item }} is {{ item.instances[0].private_ip_address }}"
+      loop: "{{ ec2_output.results }}"
+      loop_control:
+        label: "{{ item.item }}"  
+      when: action == "create"
         
