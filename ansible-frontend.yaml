@@ -43,17 +43,19 @@
             path: /etc/nginx/default.d/roboshop.conf
             regexp: '<CART-SERVER-IPADDRESS>'
             replace: 'roboshop.cart.anilkumarpatnana.online'
-    - name: Adding Shipping server address in service file
-      ansible.builtin.replace:
-            path: /etc/nginx/default.d/roboshop.conf
-            regexp: '<SHIPPING-SERVER-IPADDRESS>'
-            replace: 'roboshop.shipping.anilkumarpatnana.online'
-    - name: Adding Payment server address in service file
-      ansible.builtin.replace:
-            path: /etc/nginx/default.d/roboshop.conf
-            regexp: '<PAYMENT-SERVER-IPADDRESS>'
-            replace: 'roboshop.payment.anilkumarpatnana.online'
+    # - name: Adding Shipping server address in service file
+    #   ansible.builtin.replace:
+    #         path: /etc/nginx/default.d/roboshop.conf
+    #         regexp: '<SHIPPING-SERVER-IPADDRESS>'
+    #         replace: 'roboshop.shipping.anilkumarpatnana.online'
+    # - name: Adding Payment server address in service file
+    #   ansible.builtin.replace:
+    #         path: /etc/nginx/default.d/roboshop.conf
+    #         regexp: '<PAYMENT-SERVER-IPADDRESS>'
+    #         replace: 'roboshop.payment.anilkumarpatnana.online'
     - name: Restarting Nginx service
       ansible.builtin.service:
             name: nginx
             state: restarted
+      tags:
+        - restart-nginx
