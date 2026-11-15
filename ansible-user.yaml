@@ -37,18 +37,18 @@
            dest: /etc/systemd/system/user.service
     - name: Adding Mongodb server address in service file
       ansible.builtin.replace:
-            path: /etc/systemd/system/catalogue.service
+            path: /etc/systemd/system/user.service
             regexp: '<MONGODB-SERVER-IPADDRESS>'
             replace: 'roboshop.mongodb.anilkumarpatnana.online'
     - name: Adding redis server address in service file
       ansible.builtin.replace:
-            path: /etc/systemd/system/catalogue.service
+            path: /etc/systemd/system/user.service
             regexp: '<REDIS-SERVER-IPADDRESS>'
             replace: 'roboshop.redis.anilkumarpatnana.online'        
     - name: Reloading systemd
       ansible.builtin.systemd:
             daemon_reload: true
-    - name: starting and enabling catalogue service
+    - name: starting and enabling user service
       ansible.builtin.service:
             name: user
             state: started
