@@ -53,9 +53,14 @@
     #         path: /etc/nginx/default.d/roboshop.conf
     #         regexp: '<PAYMENT-SERVER-IPADDRESS>'
     #         replace: 'roboshop.payment.anilkumarpatnana.online'
+    - name: Test Nginx configuration syntax
+      ansible.builtin.command: nginx -t
+      register: nginx_test
+      changed_when: false
     - name: Restarting Nginx service
       ansible.builtin.service:
             name: nginx
             state: restarted
       tags:
         - restart-nginx
+      when: nginx_test.rc == 0
