@@ -1,0 +1,62 @@
+- name: Configuring catalogue server
+  hosts: catalogue
+  become: yes
+  tasks:
+    - name: Disabling default Nodejs module
+      ansible.builtin.command: dnf module disable nodejs -y
+    - name: Enabling nodejs:24 module
+      ansible.builtin.command: dnf module enable nodejs:24 -y
+    - name: Installing nodejs
+      ansible.builtin.package:
+          name: nodejs
+          state: present
+    - name: Creating app directory
+      ansible.builtin.file:
+          path: /app
+          state: directory
+    - name: Creating system user roboshop for running catalogue service
+      ansible.builtin.user:
+          name: roboshop
+          state: present
+          shell: /sbin/nologin
+          home: /app
+    - name: Downloading the catalogue application code
+      ansible.builtin.command: curl -L -o /tmp/catalogue.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip
+    - name: Unzipping code to /app directory
+      ansible.builtin.unarchive:
+              src: /tmp/catalogue.zip
+              dest: /app
+              remote_src: true 
+    - name: moving to /app directory and installing dependencies
+      ansible.builtin.command: npm install
+      args:
+        chdir: /app
+    - name: Copying catalogue service file to /etc/systemd/system/catalogue.service
+      ansible.builtin.copy:
+           src: catalogue.service
+           dest: /etc/systemd/system/catalogue.service
+    - name: Adding Mongodb server address in service file
+      ansible.builtin.replace:
+            path: /etc/systemd/system/catalogue.service
+            regexp: '<MONGODB-SERVER-IPADDRESS>'
+            replace: 'roboshop.mongodb.anilkumarpatnana.online'
+    - name: Reloading systemd
+      ansible.builtin.systemd:
+            daemon_reload: true
+    - name: starting and enabling catalogue service
+      ansible.builtin.service:
+            name: catalogue
+            state: started
+            enabled: yes
+    - name: Copying mongo.repo file to /etc/yum.repos.d/mongo.repo
+      ansible.builtin.copy:
+            src: mongo.repo
+            dest: /etc/yum.repos.d/mongo.repo
+    - name: Installing mongodb-mongosh client for loading the data to mysql-server
+      ansible.builtin.package:
+            name: mongodb-mongosh
+            state: present
+    - name: Loading data to mysql-server
+      ansible.builtin.shell: mongosh --host roboshop.mongodb.anilkumarpatnana.online </app/db/master-data.js
+    
+
