@@ -23,11 +23,6 @@
       ansible.builtin.copy:
            src: roboshop.conf
            dest: /etc/nginx/default.d/roboshop.conf
-    - name: starting and enabling Nginx service
-      ansible.builtin.service:
-            name: nginx
-            state: started
-            enabled: yes
     - name: Adding Catalogue server address in service file
       ansible.builtin.replace:
             path: /etc/nginx/default.d/roboshop.conf
@@ -53,14 +48,9 @@
     #         path: /etc/nginx/default.d/roboshop.conf
     #         regexp: '<PAYMENT-SERVER-IPADDRESS>'
     #         replace: 'roboshop.payment.anilkumarpatnana.online'
-    - name: Test Nginx configuration syntax
-      ansible.builtin.command: nginx -t
-      register: nginx_test
-      changed_when: false
-    - name: Restarting Nginx service
+    - name: starting and enabling Nginx service
       ansible.builtin.service:
             name: nginx
-            state: restarted
-      tags:
-        - restart-nginx
-      when: nginx_test.rc == 0
+            state: started
+            enabled: yes
+
