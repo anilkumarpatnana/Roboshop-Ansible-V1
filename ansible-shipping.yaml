@@ -29,6 +29,10 @@
                 src: /tmp/shipping.zip
                 dest: /app/
                 remote_src: yes
+    - name: Set default Java version to Java 25
+      ansible.builtin.alternatives:
+        name: java
+        path: /usr/lib/jvm/java-25-openjdk/bin/java
     - name: Build the application
       ansible.builtin.command: mvn clean package
       args:
