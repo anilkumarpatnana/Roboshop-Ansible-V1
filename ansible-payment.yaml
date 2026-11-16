@@ -23,12 +23,12 @@
    - name: unzipping files to /app
      ansible.builtin.unarchive:
                 src: /tmp/payment.zip
-                dest: /app/
+                dest: /app
                 remote_src: yes
    - name: Build the application and install dependencies
      ansible.builtin.shell: python3.14 -m venv /app/.venv && /app/.venv/bin/pip install -r requirements.txt
      args:
-       chdir:/app/
+       chdir: /app
    - name: Copying payment service file to /etc/systemd/system/payment.service
      ansible.builtin.copy:
               src: payment.service
