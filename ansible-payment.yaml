@@ -2,11 +2,11 @@
   hosts: payment
   become: yes
   tasks:
-    - name: Installing python3.14 and python3.14-pip
-      ansible.builtin.package:
+   - name: Installing python3.14 and python3.14-pip
+     ansible.builtin.package:
                 name: "{{item}}"
                 state: present
-      loop:
+     loop:
         - python3.14
         - python3.14-pip
    - name: Creating /app directory
