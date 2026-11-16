@@ -32,7 +32,7 @@
     - name: Build the application
       ansible.builtin.shell: mvn clean package && mv target/shipping.jar shipping.jar
       args:
-       chdir:/app/
+       chdir: /app/
     - name: Installing MySQL client 
       ansible.builtin.package:
               name: MySQL
