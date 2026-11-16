@@ -22,7 +22,7 @@
               name: roboshop
               shell: /sbin/nologin
               home: /app
-   - name: settingup JAVA_HOME
+   - name: Downloading application to /tmp
      ansible.builtin.shell: curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
    - name: unzipping files to /app
      ansible.builtin.unarchive:
@@ -49,12 +49,12 @@
      ansible.builtin.replace:
               path: /etc/systemd/system/shipping.service
               regexp: '<CART-SERVER-IPADDRESS>'
-              replace: /etc/systemd/system/shipping.service
+              replace: roboshop.cart.anilkumarpatnana.online
    - name: Adding Mysql ip address in shipping service file /etc/systemd/system/shipping.service
      ansible.builtin.replace:
               path: /etc/systemd/system/shipping.service
               regexp: '<MYSQL-SERVER-IPADDRESS>'
-              replace: /etc/systemd/system/shipping.service
+              replace: roboshop.mysql.anilkumarpatnana.online
    - name: Reloading systemd daemon
      ansible.builtin.systemd:
               daemon_reload: true
