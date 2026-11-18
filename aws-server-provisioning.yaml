@@ -49,4 +49,14 @@
       loop_control:
         label: "{{ item.item }}"  
       when: action == "create"
+    - name: Print public IPs of roboshop servers
+      ansible.builtin.debug:
+         msg: "Public IP of {{ item.item }} is {{ item.instances[0].public_ip_address }}"
+      loop: "{{ ec2_output.results }}"
+      loop_control:
+        label: "{{ item.item }}"  
+      when: 
+        - action == "create"
+        - item.item == 'frontend'
+
         
