@@ -35,7 +35,5 @@
         - rabbitmqctl set_user_tags roboshop administrator
     - name: access UI of rabbitmq using below url and credentials
       ansible.builtin.debug:
-        msg: "Open http://<RABBITMQ-PUBLIC-IP>:15672 and log in as roboshop / roboshop123. Add port 15672 from your IP to the security group first.
-
-"
+        msg: "Open http://<RABBITMQ-PUBLIC-IP>:15672 and log in as roboshop / roboshop123. Add port 15672 from your IP to the security group first."
 
